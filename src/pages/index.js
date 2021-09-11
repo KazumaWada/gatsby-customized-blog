@@ -1,5 +1,7 @@
 import * as React from "react"
 import { Link, graphql } from "gatsby"
+import Img from "gatsby-image"
+
 
 import Bio from "../components/bio"
 import Layout from "../components/layout"
@@ -41,6 +43,8 @@ const BlogIndex = ({ data, location }) => {
                 <header>
                   <h2>
                     <Link to={post.fields.slug} itemProp="url">
+                      {/* you need to write if statement when you dont need thumbnail, otherwise it get error! */}
+                      <Img fluid={post.frontmatter.thumb.childImageSharp.fluid} />
                       <span itemProp="headline">{title}</span>
                     </Link>
                   </h2>
@@ -67,23 +71,34 @@ export default BlogIndex
 
 export const pageQuery = graphql`
   query {
-    site {
-      siteMetadata {
-        title
-      }
+   site {
+  siteMetadata {
+    title
+  }
+}
+allMarkdownRemark(sort: {fields: [frontmatter___date], order: DESC}) {
+  nodes {
+    excerpt
+    fields {
+      slug
     }
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
-      nodes {
-        excerpt
-        fields {
-          slug
-        }
-        frontmatter {
-          date(formatString: "MMMM DD, YYYY")
-          title
-          description
+    frontmatter {
+      date(formatString: "MMMM DD, YYYY")
+      title
+      description
+      thumb {
+        childImageSharp {
+          fluid {
+            ...GatsbyImageSharpFluid
+          }
         }
       }
     }
   }
-`
+}
+  }
+  `
+
+
+
+
