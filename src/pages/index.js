@@ -29,6 +29,10 @@ const BlogIndex = ({ data, location }) => {
     <Layout location={location} title={siteTitle}>
       <Seo title="All posts" />
       <Bio />
+
+
+
+
       <ol style={{ listStyle: `none` }}>
         {posts.map(post => {
           const title = post.frontmatter.title || post.fields.slug
@@ -49,6 +53,9 @@ const BlogIndex = ({ data, location }) => {
                     </Link>
                   </h2>
                   <small>{post.frontmatter.date}</small>
+                  <Link to={'/tags'}>
+                  <small>{post.frontmatter.tags}</small>
+                  </Link>
                 </header>
                 <section>
                   <p
@@ -71,31 +78,32 @@ export default BlogIndex
 
 export const pageQuery = graphql`
   query {
-   site {
-  siteMetadata {
-    title
-  }
-}
-allMarkdownRemark(sort: {fields: [frontmatter___date], order: DESC}) {
-  nodes {
-    excerpt
-    fields {
-      slug
+    site {
+      siteMetadata {
+        title
+      }
     }
-    frontmatter {
-      date(formatString: "MMMM DD, YYYY")
-      title
-      description
-      thumb {
-        childImageSharp {
-          fluid {
-            ...GatsbyImageSharpFluid
+    allMarkdownRemark(sort: {fields: [frontmatter___date], order: DESC}) {
+      nodes {
+        excerpt
+        fields {
+          slug
+        }
+        frontmatter {
+          date(formatString: "MMMM DD, YYYY")
+          title
+          description
+          thumb {
+            childImageSharp {
+              fluid {
+                ...GatsbyImageSharpFluid
+              }
+            }
           }
+          tags
         }
       }
     }
-  }
-}
   }
   `
 
